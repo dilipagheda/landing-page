@@ -34,6 +34,22 @@
 */
 
 // build the nav
+let ulElementOfNav = document.querySelector('nav.navbar__menu ul#navbar__list');
+let sectionElements = document.querySelectorAll('section');
+
+let fragmentElement = document.createDocumentFragment();
+
+for (const sectionElement of sectionElements) {
+    const sectionName = sectionElement.getAttribute('data-nav');
+
+    const liElement = document.createElement('li');
+    liElement.classList = 'menu__link';
+    liElement.textContent = sectionName;
+    fragmentElement.appendChild(liElement);
+}
+
+ulElementOfNav.appendChild(fragmentElement);
+
 
 
 // Add class 'active' to section when near top of viewport
