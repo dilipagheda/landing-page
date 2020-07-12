@@ -99,9 +99,6 @@ section {
 
 .navbar__menu .menu__link:hover {
     cursor: pointer;
-    background: #333;
-    color: #fff;
-    transition: ease 0.3s all;
 }
 
 /* Header Styles */
