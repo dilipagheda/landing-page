@@ -1,13 +1,60 @@
 # Landing Page Project
 
-## Table of Contents
+## About the project
 
-* [Instructions](#instructions)
+This project is about building an interactive landing page using HTML, CSS and JavaScript.
 
-## Instructions
+It has primariliy following key features achieved through plain JavaScript.
+  - Programmatically builds navigation based on number of sections
+  - Scrolls to anchors from navigation using smooth scroll animation
+  - Highlights section in viewport upon scrolling using css animation
+  - Highlights the menu option for the section currently in viewport
 
-The starter project has some HTML and CSS styling to display a static version of the Landing Page project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+## Technology used
 
-To get started, open `js/app.js` and start building out the app's functionality
+- HTML, CSS and plain JavaScript :satisfied:
 
-For specific, detailed instructions, look at the project instructions in the Udacity Classroom.
+## Optimisation
+
+Optimisation for DOM updates is achieved using conditional rendering and custom events. For example, when user scrolls, scroll handler calculates which section is on the viewport and then updates the application state. Inside, application state function a decision is taken whether to request for DOM update or not.
+
+### Application state object
+
+Application state looks like below where it keeps track of what is currently active section, previsouly active section and a function that will update the state and request DOM update via `updateActiveSectionEvent` if a condition is met for it.
+
+Note: It is important to set state via `setActiveSection` function only else DOM render will not trigger. (kind of like React! :smiley:)
+
+```
+const APP_STATE = {
+    current_active_sectionId: null,
+    previous_active_sectionId: null,
+    setActiveSection(sectionId) {
+        //1. check for correctness
+        if(sectionId && typeof sectionId === 'string') {
+            //2. check if the state changed
+            if(sectionId !== this.current_active_sectionId) {
+                this.previous_active_sectionId = this.current_active_sectionId;
+                this.current_active_sectionId = sectionId;
+
+                //create and dispatch the event to update active section
+                const updateActiveSectionEvent = new Event('update-active-section');
+                document.dispatchEvent(updateActiveSectionEvent);
+            }
+        }
+    }
+};
+
+```
+
+Also, in order to minimise `run-to-completion` code and thus blocking the single thread, custom events are used to modularise code and to use JavaScript's asynchrnous nature such as event queue.
+
+## How to run locally
+- install a npm package `live-server` on your machine.
+- clone this repo and download on your machine
+- install VS CODE
+- add this repo to VS CODE
+- open terminal in VS CODE
+- type `live-server`
+- Now, project can be run in your browser using localhost.
+
+## Screenshots
