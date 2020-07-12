@@ -24,20 +24,18 @@ const APP_STATE = {
     current_active_sectionId: null,
     previous_active_sectionId: null,
     setActiveSection(sectionId) {
-        //1. check for correctness
-        if(sectionId && typeof sectionId === 'string') {
-            //2. check if the state changed
-            if(sectionId !== this.current_active_sectionId) {
-                this.previous_active_sectionId = this.current_active_sectionId;
-                this.current_active_sectionId = sectionId;
+        //1. check for correctness and state change
+        if (sectionId && typeof sectionId === 'string' && sectionId !== this.current_active_sectionId) {
+            this.previous_active_sectionId = this.current_active_sectionId;
+            this.current_active_sectionId = sectionId;
 
-                //3. create and dispatch the event to update active section
-                const updateActiveSectionEvent = new Event('update-active-section');
-                document.dispatchEvent(updateActiveSectionEvent);
-            }
+            //2. create and dispatch the event to update active section
+            const updateActiveSectionEvent = new Event('update-active-section');
+            document.dispatchEvent(updateActiveSectionEvent);
         }
     }
 };
+
 const ulElementOfNav = document.querySelector('nav.navbar__menu ul#navbar__list');
 const sectionElements = document.querySelectorAll('section');
 
@@ -50,9 +48,9 @@ const sectionElements = document.querySelectorAll('section');
 //helper function to determine the height of the nav bar depending on viewport width. i.e., mobile or desktop
 function getNavBarHeight() {
     var x = window.matchMedia("(max-width: 767px)");
-    if(x.matches) {
+    if (x.matches) {
         return NAVBAR_HEIGHT_MOBILE;
-    }else {
+    } else {
         return NAVBAR_HEIGHT;
     }
 }
@@ -61,7 +59,7 @@ function getNavBarHeight() {
 function getActiveSectionId(sectionList) {
 
     //1. check for empty list
-    if(sectionList.length === 0){ 
+    if (sectionList.length === 0) {
         return null;
     }
 
@@ -69,14 +67,13 @@ function getActiveSectionId(sectionList) {
     sectionList = sectionList.filter(item => item.top > 0);
 
     //3. check for empty list
-    if(sectionList.length === 0){ 
+    if (sectionList.length === 0) {
         return null;
     }
 
     let minSection = sectionList[0];
     for (const sectionItem of sectionList) {
-        if(sectionItem.top < minSection.top)
-        {
+        if (sectionItem.top < minSection.top) {
             minSection = sectionItem;
         }
     }
@@ -86,19 +83,19 @@ function getActiveSectionId(sectionList) {
 
 //helper function to build menu
 function buildMenu() {
-    let fragmentElement = document.createDocumentFragment();
+    const fragmentElement = document.createDocumentFragment();
 
     for (const sectionElement of sectionElements) {
         const sectionName = sectionElement.getAttribute('data-nav');
         const sectionId = sectionElement.getAttribute('id');
-    
         const liElement = document.createElement('li');
+
         liElement.classList = 'menu__link';
-        liElement.setAttribute('data-section-id',sectionId);
+        liElement.setAttribute('data-section-id', sectionId);
         liElement.textContent = sectionName;
         fragmentElement.appendChild(liElement);
     }
-    
+
     ulElementOfNav.appendChild(fragmentElement);
 }
 
@@ -117,53 +114,47 @@ headingElement.scrollIntoView();
 
 
 //function to render active section based on APP_STATE
-function onUpdateActiveSectionHandler()
-{
+function onUpdateActiveSectionHandler() {
     //1. remove active class from previoulsy active section
-    if(APP_STATE.previous_active_sectionId) {
-        let previouslyActiveSectionElement = document.querySelector('section.active');
-        if(previouslyActiveSectionElement) {
+    if (APP_STATE.previous_active_sectionId) {
+        const previouslyActiveSectionElement = document.querySelector('section.active');
+        if (previouslyActiveSectionElement) {
             previouslyActiveSectionElement.classList.remove('active');
         }
-        
 
-        let previouslyActiveMenuElement = document.querySelector(`#navbar__list .menu__link.active`);
-        if(previouslyActiveMenuElement) {
+        const previouslyActiveMenuElement = document.querySelector(`#navbar__list .menu__link.active`);
+        if (previouslyActiveMenuElement) {
             previouslyActiveMenuElement.classList.remove('active');
         }
     }
 
     //2. add active class to currently active section
-    if(APP_STATE.current_active_sectionId) {
-        let currentlyuActiveSectionElement = document.getElementById(APP_STATE.current_active_sectionId);
+    if (APP_STATE.current_active_sectionId) {
+        const currentlyuActiveSectionElement = document.getElementById(APP_STATE.current_active_sectionId);
         currentlyuActiveSectionElement.classList.add('active');
 
-        let currentlyActiveMenuElement = document.querySelector(`#navbar__list .menu__link[data-section-id=${APP_STATE.current_active_sectionId}]`);
-        if(currentlyActiveMenuElement) {
+        const currentlyActiveMenuElement = document.querySelector(`#navbar__list .menu__link[data-section-id=${APP_STATE.current_active_sectionId}]`);
+        if (currentlyActiveMenuElement) {
             currentlyActiveMenuElement.classList.add('active');
         }
     }
-
 }
 
 //function to handle scroll event
 function onScrollHandler(event) {
-    let sectionList = [];
+    const sectionList = [];
 
     //1. calculate top value for each section
     for (const sectionElement of sectionElements) {
         const sectionId = sectionElement.getAttribute('id');
-
         const headerElement = sectionElement.querySelector('h2');
+        const rect = headerElement.getBoundingClientRect();
 
-        let rect = headerElement.getBoundingClientRect();
-        
-        sectionList.push({id:sectionId, top: rect.top-getNavBarHeight()});
-        
+        sectionList.push({ id: sectionId, top: rect.top - getNavBarHeight() });
     }
 
     //2. retrieve active section
-    let activeSectionId = getActiveSectionId(sectionList);
+    const activeSectionId = getActiveSectionId(sectionList);
 
     //3. update the app state
     APP_STATE.setActiveSection(activeSectionId);
@@ -172,18 +163,18 @@ function onScrollHandler(event) {
 //function to handle click event
 function onMenuClickHandler() {
     //1. check for the tagName
-    if(event.target.tagName == 'LI')
-    {
+    if (event.target.tagName == 'LI') {
         //2. get the id of the section
-        let sectionId = event.target.getAttribute('data-section-id');
-        
+        const sectionId = event.target.getAttribute('data-section-id');
+
         //3. scroll to the section header using smooth scroll
         const sectionElement = document.getElementById(sectionId);
-        let rect = sectionElement.getBoundingClientRect();
+        const rect = sectionElement.getBoundingClientRect();
+
         window.scrollTo({
             top: window.scrollY + rect.y - getNavBarHeight(),
             behavior: 'smooth'
-          });
+        });
     }
 }
 
