@@ -31,7 +31,7 @@ const APP_STATE = {
                 this.previous_active_sectionId = this.current_active_sectionId;
                 this.current_active_sectionId = sectionId;
 
-                //create and dispatch the event to update active section
+                //3. create and dispatch the event to update active section
                 const updateActiveSectionEvent = new Event('update-active-section');
                 document.dispatchEvent(updateActiveSectionEvent);
             }
