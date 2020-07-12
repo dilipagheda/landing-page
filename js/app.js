@@ -47,7 +47,7 @@ const sectionElements = document.querySelectorAll('section');
 
 //helper function to determine the height of the nav bar depending on viewport width. i.e., mobile or desktop
 function getNavBarHeight() {
-    var x = window.matchMedia("(max-width: 767px)");
+    var x = window.matchMedia('(max-width: 767px)');
 
     return x.matches ? NAVBAR_HEIGHT_MOBILE : NAVBAR_HEIGHT;
 }
