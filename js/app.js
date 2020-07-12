@@ -18,6 +18,8 @@
  * 
 */
 const NAVBAR_HEIGHT = 52; // height of the top nav bar in pixels
+const NAVBAR_HEIGHT_MOBILE = 200; // height of the top nav bar in pixels
+
 const APP_STATE = {
     current_active_sectionId: null,
     previous_active_sectionId: null,
@@ -44,6 +46,16 @@ const sectionElements = document.querySelectorAll('section');
  * Start Helper Functions
  * 
 */
+
+//helper function to determine the height of the nav bar depending on viewport width. i.e., mobile or desktop
+function getNavBarHeight() {
+    var x = window.matchMedia("(max-width: 767px)");
+    if(x.matches) {
+        return NAVBAR_HEIGHT_MOBILE;
+    }else {
+        return NAVBAR_HEIGHT;
+    }
+}
 
 //helper function to get active section
 function getActiveSectionId(sectionList) {
@@ -146,7 +158,7 @@ function onScrollHandler(event) {
 
         let rect = headerElement.getBoundingClientRect();
         
-        sectionList.push({id:sectionId, top: rect.top-NAVBAR_HEIGHT});
+        sectionList.push({id:sectionId, top: rect.top-getNavBarHeight()});
         
     }
 
@@ -165,12 +177,13 @@ function onMenuClickHandler() {
         //2. get the id of the section
         let sectionId = event.target.getAttribute('data-section-id');
         
-        //3. scroll to the section using smooth scroll
+        //3. scroll to the section header using smooth scroll
         const sectionElement = document.getElementById(sectionId);
-        sectionElement.scrollIntoView({behavior: 'smooth'});
-
-        // //4. update the app state
-        // APP_STATE.setActiveSection(sectionId);
+        let rect = sectionElement.getBoundingClientRect();
+        window.scrollTo({
+            top: window.scrollY + rect.y - getNavBarHeight(),
+            behavior: 'smooth'
+          });
     }
 }
 
