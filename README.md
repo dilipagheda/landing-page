@@ -58,3 +58,5 @@ Also, in order to minimise `run-to-completion` code and thus blocking the single
 - Now, project can be run in your browser using localhost.
 
 ## Screenshots
+![](https://github.com/dilipagheda/landing-page/blob/master/screenshots/1.png)
+
