@@ -107,7 +107,11 @@ buildMenu();
 
 // Scroll back to the top on fresh page load
 const headingElement = document.querySelector('.landing__container h2');
-headingElement.scrollIntoView();
+const rect = headingElement.getBoundingClientRect();
+window.scrollTo({
+    top: rect.top - getNavBarHeight(),
+    behavior: 'smooth'
+});
 
 
 //function to render active section based on APP_STATE
@@ -169,7 +173,7 @@ function onMenuClickHandler() {
         const rect = sectionElement.getBoundingClientRect();
 
         window.scrollTo({
-            top: window.scrollY + rect.y - getNavBarHeight(),
+            top: window.scrollY + rect.top - getNavBarHeight(),
             behavior: 'smooth'
         });
     }
